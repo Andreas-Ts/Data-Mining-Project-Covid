@@ -119,14 +119,14 @@ print(data_days_stats['Malta'].head(40))
 print(data_days_stats['Malta'].tail(40))
 
 
-# In[161]:
+# In[170]:
 
 
 print(data_days_stats['France'].head(50))
 print(data_days_stats['France'].tail(50))
 
 
-# In[162]:
+# In[171]:
 
 
 mean_daily_tests=[]
@@ -138,17 +138,78 @@ for dataframes in data_days_stats.values():
     mean_daily_deaths.append(dataframes['Daily deaths'].loc[dataframes["Cases"]>10].mean())
 
 
-# In[167]:
-
-
-countries_stats.head()
-
-
-# In[165]:
+# In[175]:
 
 
 countries_stats['Mean daily tests']=mean_daily_tests
 countries_stats['Mean daily cases']=mean_daily_cases
 countries_stats['Mean daily deaths']=mean_daily_deaths
 
+
+
+# In[177]:
+
+
+countries_stats.head(10)
+
+
+# In[179]:
+
+
 countries_stats[['Mean daily tests','Mean daily cases','Mean daily deaths']]=countries_stats[['Mean daily tests','Mean daily cases','Mean daily deaths']].apply(lambda  x:round(x))
+
+
+# In[180]:
+
+
+countries_stats.head(10)
+
+
+# In[185]:
+
+
+pd.options.display.max_rows=105
+countries_stats.sort_values(by=['Mean daily deaths'],ascending=False)
+
+
+# In[188]:
+
+
+countries_stats["Daily tests per thousand people"]=countries_stats['Mean daily tests']/(countries_stats['Population']/1000)
+countries_stats["Daily cases per thousand people"]=countries_stats['Mean daily cases']/(countries_stats['Population']/1000)
+countries_stats["Daily deaths per thousand people"]=countries_stats['Mean daily deaths']/(countries_stats['Population']/1000)
+
+
+# In[189]:
+
+
+pd.options.display.max_rows=105
+countries_stats.sort_values(by=['Daily deaths per thousand people'],ascending=False)
+
+
+# In[200]:
+
+
+total_cases=[]
+total_deaths=[]
+for dataframe in data_days_stats.values():
+    total_cases.append(dataframe.loc['2021-02-28','Cases'])
+    total_deaths.append(dataframe.loc['2021-02-28','Deaths'])
+countries_stats['Total cases']= total_cases
+countries_stats['Total deaths']= total_deaths
+
+
+# In[204]:
+
+
+countries_stats['Total cases percentage']=countries_stats['Total cases']/countries_stats['Population']*100
+countries_stats['Total deaths percentage']=countries_stats['Total deaths']/countries_stats['Population']*100
+
+
+# In[211]:
+
+
+countries_stats.sort_values(by='Total deaths percentage',ascending=False)
+
+
+# In[212]:
